@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:time_keeper/widgets/elevated_button_widget.dart';
-import 'package:time_keeper/widgets/my_textfield.dart';
+import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
+import 'package:time_keeper/widgets/standard_textfield.dart';
 import '../auth/auth_exceptions.dart';
 import '../auth/bloc/auth_bloc.dart';
 import '../auth/bloc/auth_event.dart';
@@ -74,23 +74,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   const SizedBox(height: 50.0),
                   //username textfield from components/my_textfield.dart
-                  MyTextField(
+                  StandardTextField(
                     controller: _emailController,
                     obscureText: false,
                     hintText: 'Enter your email here',
                   ),
                   const SizedBox(height: 25),
                   //password textfield from components/my_textfield.dart
-                  MyTextField(
+                  StandardTextField(
                     controller: _passwordController,
                     hintText: 'Enter your password here',
                     obscureText: true,
                   ),
                   const SizedBox(height: 25.0),
                   //Register
-                  ElevatedButtonWidget(
-                    buttonText: 'Register',
-                    onPressed: () async {
+                  ReuseableElevatedButton(
+                    text: 'Register',
+                    color: const Color.fromARGB(255, 55, 82, 117),
+                    onPressed: () {
                       final email = _emailController.text;
                       final password = _passwordController.text;
                       context.read<AuthBloc>().add(
@@ -108,8 +109,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       const Text('Already registered?'),
                       const SizedBox(width: 4),
                       TextButton(
-                        onPressed: () {
-                          // sent user to login screen
+                        onPressed: () async {
+                          // send user to login screen
                           context.read<AuthBloc>().add(
                                 const AuthEventLogOut(),
                               );
@@ -129,56 +130,3 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 }
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: SingleChildScrollView(
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               const Text('Enter your email and passoword to register'),
-//               TextField(
-//                 controller: _email,
-//                 enableSuggestions: false,
-//                 autocorrect: false,
-//                 autofocus: true,
-//                 keyboardType: TextInputType.emailAddress,
-//                 decoration: const InputDecoration(
-//                   hintText: 'Enter your email here',
-//                 ),
-//               ),
-//               TextField(
-//                 controller: _password,
-//                 obscureText: true,
-//                 enableSuggestions: false,
-//                 autocorrect: false,
-//                 decoration: const InputDecoration(
-//                   hintText: 'Enter your password here',
-//                 ),
-//               ),
-//               Center(
-//                 child: Column(
-//                   children: [
-//                     TextButton(
-//                       onPressed: () {},
-//                       child: const Text('Register'),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Center(
-//                 child: Column(
-//                   children: [
-//                     TextButton(
-//                       onPressed: () {},
-//                       child: const Text('Already registered? Login here.'),
-//                     ),
-//                   ],
-//                 ),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

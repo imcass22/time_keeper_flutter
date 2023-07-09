@@ -1,14 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'calendar_screen.dart';
+import 'package:time_keeper/screens/settings_screen.dart';
 
 class DayOfTheWeekScreen extends StatefulWidget {
-  static const String screen = 'day-of-the-week_screen';
-  dynamic passedDate;
-  DayOfTheWeekScreen({
-    Key? key,
-    required this.passedDate,
-  }) : super(key: key);
+  const DayOfTheWeekScreen({Key? key}) : super(key: key);
 
   @override
   State<DayOfTheWeekScreen> createState() => _DayOfTheWeekScreenState();
@@ -47,14 +42,20 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
             icon: const Icon(
               Icons.settings,
             ),
           ),
         ],
-        title: Text(
-            '${widget.passedDate}'), //TODO get date user selects from the calendar here
+        title: const Text(
+            'Need date selected here'), //TODO get date user selects from the calendar here
       ),
       body: Column(
         children: [
@@ -76,7 +77,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
           ),
           Container(
             padding:
-                const EdgeInsets.only(top: 20, left: 40, right: 40, bottom: 10),
+                const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
             child: Row(
               children: [
                 const Text(
@@ -107,7 +108,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
           ),
           Container(
             padding:
-                const EdgeInsets.only(top: 20, left: 40, right: 40, bottom: 10),
+                const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
             child: Row(
               children: [
                 const Text(
@@ -138,7 +139,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
           ),
           Container(
             padding:
-                const EdgeInsets.only(top: 20, left: 40, right: 40, bottom: 10),
+                const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
             child: Row(
               children: [
                 const Text(
@@ -171,7 +172,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
           //Container for notes
           Container(
             padding:
-                const EdgeInsets.only(top: 20, left: 40, right: 40, bottom: 10),
+                const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
             child: const Row(
               children: [
                 Text(
@@ -186,16 +187,17 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 350,
-                height: 300,
-                child: TextField(
+              Container(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                // Wrap user text in a container
+                child: TextFormField(
+                  maxLines: 50,
                   controller: _notes,
                   decoration: const InputDecoration(
                     hintText: 'Enter your notes here...',
                     constraints: BoxConstraints(
-                      maxHeight: 300,
-                      maxWidth: 350,
+                      maxHeight: 200,
+                      maxWidth: 390,
                     ),
                     border: OutlineInputBorder(),
                     fillColor: Colors.grey,
@@ -203,7 +205,138 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
                 ),
               ),
             ],
-          )
+          ),
+          Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width,
+            color: const Color.fromARGB(255, 134, 150, 134),
+            child: Container(
+              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
+              child: const Text(
+                'Running weekly totals: ',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              top: 30,
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  'Total Regular Hours: ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                const Text('Amount'),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  'Total Overtime Hours: ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                const Text('Amount'),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  'Total Daily Hours: ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                const Text('Amount'),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  'Total Weekly Hours: ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                const Text('Amount'),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  'Total Weekly Mileage: ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                const Text('Amount'),
+              ],
+            ),
+          ),
         ],
       ),
     );

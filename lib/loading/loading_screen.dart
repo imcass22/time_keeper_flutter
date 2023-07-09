@@ -32,6 +32,7 @@ class LoadingScreen {
     required BuildContext context,
     required String text,
   }) {
+    // ignore: no_leading_underscores_for_local_identifiers
     final _text = StreamController<String>();
     _text.add(text);
 
@@ -57,6 +58,7 @@ class LoadingScreen {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
+                // will allow user to scroll if content goes outside boundaries set
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -80,7 +82,7 @@ class LoadingScreen {
                       ),
                     ],
                   ),
-                ), // will allow user to scroll if content goes outside boundaries set
+                ),
               ),
             ),
           ),

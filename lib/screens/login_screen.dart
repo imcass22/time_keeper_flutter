@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:time_keeper/dialogs/loading_dialog.dart';
-import 'package:time_keeper/widgets/elevated_button_widget.dart';
-import 'package:time_keeper/widgets/my_textfield.dart';
+import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
+import 'package:time_keeper/widgets/standard_textfield.dart';
 import 'package:time_keeper/firebase_options.dart';
 import '../auth/auth_exceptions.dart';
 import '../auth/bloc/auth_bloc.dart';
@@ -22,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   //text controllers
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
-  CloseDialog? _closeDialogHandle;
 
   @override
   void initState() {
@@ -43,27 +41,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
         if (state is AuthStateLoggedOut) {
-          final closeDialog = _closeDialogHandle;
-          if (!state.isLoading && closeDialog != null) {
-            closeDialog();
-            _closeDialogHandle = null;
-          } else if (state.isLoading && closeDialog == null) {
-            _closeDialogHandle = showLoadingDialog(
-              context: context,
-              text: 'Loading...',
-            );
-          }
-
           if (state.exception is UserNotFoundAuthException) {
             await showErrorDialog(
-                context, 'Cannot find a user with the entered credentials');
+                context, 'User with the entered credentials is not found');
           } else if (state.exception is WrongPasswordAuthException) {
             await showErrorDialog(context, 'Wrong credentials');
           } else if (state.exception is GenericAuthException) {
-            await showErrorDialog(
-              context,
-              'Authentication error',
-            );
+            await showErrorDialog(context, 'Authentication error');
           }
         }
       },
@@ -96,23 +80,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 50.0),
                       //username textfield from components/my_textfield.dart
-                      MyTextField(
+                      StandardTextField(
                         controller: _emailController,
                         obscureText: false,
                         hintText: 'Enter your email here',
                       ),
                       const SizedBox(height: 25),
                       //password textfield from components/my_textfield.dart
-                      MyTextField(
+                      StandardTextField(
                         controller: _passwordController,
                         hintText: 'Enter your password here',
                         obscureText: true,
                       ),
                       const SizedBox(height: 25.0),
                       //Register
-                      ElevatedButtonWidget(
-                        buttonText: 'Login',
-                        onPressed: () async {
+                      ReuseableElevatedButton(
+                        text: 'Login',
+                        color: const Color.fromARGB(255, 55, 82, 117),
+                        onPressed: () {
                           final email = _emailController.text;
                           final password = _passwordController.text;
                           context.read<AuthBloc>().add(

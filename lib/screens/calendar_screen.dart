@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:time_keeper/screens/day_of_the_week_screen.dart';
+import 'package:time_keeper/routes.dart';
+import 'package:time_keeper/screens/settings_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
-  static const String screen = 'calendar_screen';
+  static const String screen = 'calendar';
   const CalendarScreen({super.key});
   static dynamic focusedDay;
   @override
@@ -20,8 +21,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       setState(() {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
-        Navigator.pushNamed(context, DayOfTheWeekScreen.screen,
+        final datePicked = Navigator.pushNamed(context, dayOfTheWeekRoute,
             arguments: dateSelected(focusedDay));
+        print(datePicked);
       });
     }
   }
@@ -38,7 +40,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // Navigator.pushNamed(context, Settings.screen);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
             },
             icon: const Icon(Icons.settings),
           ),
@@ -62,8 +68,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             const SizedBox(
               height: 50,
             ),
-            Container(
-              height: 350,
+            SizedBox(
+              height: 400,
               width: MediaQuery.of(context).size.width,
               child: TableCalendar(
                 //startingDayOfWeek: StartingDayOfWeek.monday,
@@ -84,12 +90,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 //TODO add an onchanged maybe to when date is selected, it will take to new screen
               ),
             ),
-            const SizedBox(
-              height: 15,
-            ),
             Container(
               padding: const EdgeInsets.only(
-                top: 70,
+                top: 50,
                 left: 20,
                 right: 20,
               ),

@@ -20,11 +20,26 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Text(
-                "We've sent you an email verification. Please open it to verify your account"),
-            const Text(
-                "If you haven't received a verificaton email yet, press the below button."),
-            TextButton(
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    left: 26.0, right: 20, top: 100, bottom: 15),
+                child: Text(
+                    "We've sent you an email verification. Please open it to verify your account"),
+              ),
+            ),
+            const Padding(
+              padding:
+                  EdgeInsets.only(left: 26.0, right: 20, top: 15, bottom: 50),
+              child: Text(
+                  "If you haven't received a verificaton email yet, press the below button."),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(350, 50),
+                backgroundColor: const Color.fromARGB(255, 55, 82, 117),
+                foregroundColor: Colors.white,
+              ),
               onPressed: () {
                 // sent email verification to user
                 context.read<AuthBloc>().add(
@@ -33,7 +48,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               },
               child: const Text('Send email verification'),
             ),
-            TextButton(
+            const SizedBox(height: 15.0),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(350, 50),
+                backgroundColor: const Color.fromARGB(255, 55, 82, 117),
+                foregroundColor: Colors.white,
+              ),
               onPressed: () async {
                 context.read<AuthBloc>().add(
                       const AuthEventLogOut(),
