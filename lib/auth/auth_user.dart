@@ -13,7 +13,7 @@ class AuthUser {
   });
 
   factory AuthUser.fromFirebase(User user) => AuthUser(
-        id: user.uid,
+        id: user.uid, //uid = user unique id from firebase package
         email: user.email!,
         isEmailVerified: user.emailVerified,
       );

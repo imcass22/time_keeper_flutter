@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
           return const RegistrationScreen();
         } else {
           return const Scaffold(
-            body: CircularProgressIndicator(),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
       },

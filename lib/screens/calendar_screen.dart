@@ -15,6 +15,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   final CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  TextEditingController _date = TextEditingController();
 
   void onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -22,14 +23,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
         final datePicked = Navigator.pushNamed(context, dayOfTheWeekRoute,
-            arguments: dateSelected(focusedDay));
+            arguments: dateSelected(selectedDay));
         print(datePicked);
       });
     }
   }
 
-  DateTime dateSelected(focusedDay) {
-    return _focusedDay = focusedDay;
+  DateTime dateSelected(selectedDay) {
+    return _selectedDay = DateTime.timestamp();
   }
 
   @override
@@ -81,7 +82,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 availableGestures: AvailableGestures.all,
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 focusedDay: _focusedDay,
-                firstDay: DateTime.utc(2020, 10, 16),
+                firstDay: DateTime(2020, 10, 16),
                 lastDay: DateTime(3000, 3, 14),
                 calendarFormat: _calendarFormat,
                 //calling onDaySelected method to take user to the day_of_the_week screen
