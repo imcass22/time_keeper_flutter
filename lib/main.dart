@@ -17,12 +17,6 @@ import 'auth/bloc/auth_event.dart';
 import 'auth/bloc/auth_state.dart';
 import 'loading/loading_screen.dart';
 
-//use starting character k when setting up constants
-var kColorScheme = ColorScheme.fromSeed(seedColor: Colors.grey);
-var kDarkColorScheme = ColorScheme.fromSeed(
-  brightness: Brightness.dark,
-  seedColor: Colors.black54,
-);
 void main() async {
   //ensures the orientation works as intended
   //initializing Firebase
@@ -38,49 +32,9 @@ void main() async {
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(FirebaseAuthProvider()),
           child: MaterialApp(
-            //creating a light and dark color scheme based on the user's system preferences they have set up
-            darkTheme: ThemeData.dark().copyWith(
-              useMaterial3: true,
-              colorScheme: kDarkColorScheme,
-              cardTheme: const CardTheme().copyWith(
-                color: kDarkColorScheme.secondaryContainer,
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              ),
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kDarkColorScheme.primaryContainer,
-                  foregroundColor: kDarkColorScheme.onPrimaryContainer,
-                ),
-              ),
+            theme: ThemeData(
+              primarySwatch: Colors.teal,
             ),
-            //customizing the apps theme accross the app
-            theme: ThemeData().copyWith(
-              useMaterial3: true,
-              colorScheme: kColorScheme,
-              //using .copyWith overrides the default styling
-              appBarTheme: const AppBarTheme().copyWith(
-                backgroundColor: kColorScheme.onPrimaryContainer,
-                foregroundColor: kColorScheme.primaryContainer,
-              ),
-              cardTheme: const CardTheme().copyWith(
-                color: kColorScheme.secondaryContainer,
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              ),
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kColorScheme.primaryContainer,
-                ),
-              ),
-              textTheme: ThemeData().textTheme.copyWith(
-                    titleLarge: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: kColorScheme.onSecondaryContainer,
-                      fontSize: 16,
-                    ),
-                  ),
-            ),
-            //looks at what the user selected in their system to apply the appropriate theme
-            themeMode: ThemeMode.system,
             home: const HomePage(),
             routes: {
               calendarRoute: (context) => const CalendarScreen(),

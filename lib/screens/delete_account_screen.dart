@@ -9,6 +9,7 @@ class DeleteAccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: const Text('Delete Account'),
       ),
       body: Column(
@@ -31,13 +32,14 @@ class DeleteAccountScreen extends StatelessWidget {
           const SizedBox(height: 50),
           ReuseableElevatedButton(
             text: 'No',
-            color: const Color.fromARGB(255, 20, 92, 151),
+            color: const Color.fromARGB(255, 62, 61, 61),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const CalendarScreen(),
-                ),
-              );
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (context) => CalendarScreen(),
+              //   ),
+              // );
+              Navigator.pop(context);
             },
           ),
         ],

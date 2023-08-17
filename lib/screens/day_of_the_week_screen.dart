@@ -1,24 +1,32 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:time_keeper/cloud/cloud_storage_constants.dart';
 import 'package:time_keeper/cloud/firebase_cloud_storage.dart';
 import 'package:time_keeper/dialogs/cannot_share_empty_note_dialog.dart';
+import 'package:time_keeper/dialogs/error_dialog.dart';
 import 'package:time_keeper/generics/get_arguments.dart';
+import 'package:time_keeper/model/event.dart';
 import 'package:time_keeper/screens/settings_screen.dart';
 import 'package:time_keeper/views/user_text_list_view.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import '../auth/auth_service.dart';
 import '../cloud/cloud_note.dart';
+import '../utils.dart';
 
 class DayOfTheWeekScreen extends StatefulWidget {
-  const DayOfTheWeekScreen({Key? key}) : super(key: key);
+  const DayOfTheWeekScreen({Key? key, this.data}) : super(key: key);
+  final Event? data;
 
   @override
   State<DayOfTheWeekScreen> createState() => _DayOfTheWeekScreenState();
 }
 
 class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
+  late DateTime selectedDate;
   CloudNote? _note;
   CloudNote? regularHours;
   CloudNote? overtimeHours;
@@ -36,8 +44,6 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
   //this controller is to get what the user typed in the mileage section
   late final TextEditingController _mileage;
 
-  //accepting title and input data for appBar title TODO FIX
-
   @override
   void initState() {
     _notes = TextEditingController();
@@ -45,15 +51,10 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
     _overtimeHours = TextEditingController();
     _mileage = TextEditingController();
     super.initState();
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _notes.dispose();
-    _regularHours.dispose();
-    _overtimeHours.dispose();
-    _mileage.dispose();
+    if (widget.data == null) {
+      selectedDate = DateTime.now();
+    }
   }
 
   Future saveUserData() async {
@@ -75,32 +76,64 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
     });
   }
 
+  List<Widget> buildEditingActions() => [
+        ElevatedButton.icon(
+          icon: const Icon(Icons.done),
+          label: const Text('SAVE'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+          ),
+          onPressed: () {
+            saveUserData();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Your data has been saved',
+                ),
+                backgroundColor: Colors.black,
+              ),
+            );
+            Navigator.pop(context);
+          },
+        ),
+      ];
+
+  @override
+  void dispose() {
+    super.dispose();
+    _notes.dispose();
+    _regularHours.dispose();
+    _overtimeHours.dispose();
+    _mileage.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(95, 28, 27, 27),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.settings,
-            ),
-          ),
-        ],
-        title: const Text(
-            'Need date selected here'), //TODO get date user selects from the calendar here
+        actions: buildEditingActions(),
+        // [
+        //   IconButton(
+        //     onPressed: () {
+        //       Navigator.of(context).push(
+        //         MaterialPageRoute(
+        //           builder: (context) => const SettingsScreen(),
+        //         ),
+        //       );
+        //     },
+        //     icon: const Icon(
+        //       Icons.settings,
+        //     ),
+        //   ),
+        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -112,7 +145,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
               child: Container(
                 padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
                 child: const Text(
-                  'Enter your hours and mileage below: ',
+                  'Select a date and enter your data below: ',
                   style: TextStyle(
                     color: Colors.black87,
                     fontSize: 16,
@@ -121,6 +154,8 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 12),
+            //buildDatePicker(),
             Container(
               padding: const EdgeInsets.only(
                   top: 15, left: 20, right: 20, bottom: 10),
@@ -137,7 +172,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
                   ),
                   SizedBox(
                     width: 70,
-                    child: TextField(
+                    child: TextFormField(
                       controller: _regularHours,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -168,7 +203,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
                   ),
                   SizedBox(
                     width: 70,
-                    child: TextField(
+                    child: TextFormField(
                       controller: _overtimeHours,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -199,7 +234,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
                   ),
                   SizedBox(
                     width: 70,
-                    child: TextField(
+                    child: TextFormField(
                       controller: _mileage,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -207,7 +242,7 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
                           maxWidth: 40,
                         ),
                         border: OutlineInputBorder(),
-                        fillColor: Colors.grey,
+                        fillColor: Color.fromARGB(255, 218, 217, 217),
                       ),
                     ),
                   ),
@@ -246,49 +281,49 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
                         maxWidth: 390,
                       ),
                       border: OutlineInputBorder(),
-                      fillColor: Colors.grey,
+                      fillColor: Color.fromARGB(255, 226, 222, 222),
                     ),
                   ),
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ReuseableElevatedButton(
-                  text: 'Save',
-                  color: const Color.fromARGB(255, 20, 92, 151),
-                  onPressed: () {
-                    saveUserData();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Your data has been saved',
-                        ),
-                        backgroundColor: Colors.white,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width,
-              color: const Color.fromARGB(255, 134, 150, 134),
-              child: Container(
-                padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
-                child: const Text(
-                  'Running weekly totals: ',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     ReuseableElevatedButton(
+            //       text: 'Save',
+            //       color: const Color.fromARGB(255, 20, 92, 151),
+            //       onPressed: () {
+            //         saveUserData();
+            //         ScaffoldMessenger.of(context).showSnackBar(
+            //           const SnackBar(
+            //             content: Text(
+            //               'Your data has been saved',
+            //             ),
+            //             backgroundColor: Colors.white,
+            //           ),
+            //         );
+            //       },
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 15),
+            // Container(
+            //   height: 40,
+            //   width: MediaQuery.of(context).size.width,
+            //   color: const Color.fromARGB(255, 134, 150, 134),
+            //   child: Container(
+            //     padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
+            //     child: const Text(
+            //       'Running weekly totals: ',
+            //       style: TextStyle(
+            //         color: Colors.black87,
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             // StreamBuilder(
             //   stream: _userTextService.allText(ownerUserId: userID),
             //   builder: (context, snapshot) {
@@ -435,3 +470,23 @@ class _DayOfTheWeekScreenState extends State<DayOfTheWeekScreen> {
     );
   }
 }
+
+// Widget buildDate() {
+//     Row(
+//       children: [
+//        Expanded(
+//           child: buildDropdownField(
+//             text: Utils.toDate(selectedDate),
+//             onClicked: () {
+//               pickedDate(pickDate: true);
+//             },
+//           ),
+//         ),
+//       ],
+//     );
+//     return buildDropdownField(
+//         text: Utils.toDate(selectedDate),
+//         onClicked: () {
+//           pickedDate(pickDate: true);
+//         });
+//   }

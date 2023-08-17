@@ -49,6 +49,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 85, 145, 140),
           title: const Text('Reset password'),
         ),
         body: Padding(
@@ -81,7 +82,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 ReuseableElevatedButton(
                   text: 'Send me a password reset link',
-                  color: const Color.fromARGB(255, 55, 82, 117),
+                  color: const Color.fromARGB(255, 62, 61, 61),
                   onPressed: () {
                     final email = _passwordController.text;
                     context

@@ -53,6 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 85, 145, 140),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -96,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: const Text(
                   'Account',
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
