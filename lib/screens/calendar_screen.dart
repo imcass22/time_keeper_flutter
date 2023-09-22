@@ -1,14 +1,13 @@
+import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:time_keeper/screens/day_of_the_week_screen.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:time_keeper/screens/settings_screen.dart';
 import 'package:time_keeper/views/add_event_view.dart';
 import 'package:time_keeper/views/edit_event_view.dart';
-import 'package:time_keeper/widgets/calendar_widget.dart';
 import '../model/event.dart';
 
 class CalendarScreen extends StatefulWidget {
-  static const String screen = 'calendar';
   const CalendarScreen({super.key});
 
   @override
@@ -16,299 +15,203 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
-  Map<DateTime, List<Event>> events = {};
-  final DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
+
+  late DateTime _focusedDay;
+  late DateTime _firstDay;
+  late DateTime _lastDay;
+  late DateTime _selectedDay;
+
+  late Map<DateTime, List<Event>> _events;
 
   @override
   void initState() {
+    //so events are loaded
+    _focusedDay = DateTime.now();
+    _firstDay = DateTime.now().subtract(const Duration(days: 1000));
+    _lastDay = DateTime.now().add(const Duration(days: 1000));
+    _selectedDay = DateTime.now();
+    //_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
     super.initState();
-    _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _events = LinkedHashMap(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    );
+    _loadFirestoreEvents();
+  }
+
+  //get unique hash code for each date
+  int getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
+  }
+
+  // load all Firestore user data
+  _loadFirestoreEvents() async {
+    final firstDay = DateTime(_focusedDay.year, _focusedDay.month, 1);
+    final lastDay = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
+    _events = {};
+
+    final snap = await FirebaseFirestore.instance
+        .collection('events')
+        .where('date', isGreaterThanOrEqualTo: firstDay)
+        .where('date', isLessThanOrEqualTo: lastDay)
+        .withConverter(
+            fromFirestore: Event.fromFirestore,
+            toFirestore: (event, options) => event.toFirestore())
+        .get();
+    for (var doc in snap.docs) {
+      final event = doc.data();
+      final day =
+          DateTime.utc(event.date.year, event.date.month, event.date.day);
+      if (_events[day] == null) {
+        _events[day] = [];
+      }
+      _events[day]!.add(event);
+    }
+    setState(() {});
   }
 
   List<Event> _getEventsForDay(DateTime day) {
     //retrieve all events from the selected day
-    return events[day] ?? [];
-  }
-
-  @override
-  void dispose() {
-    _selectedEvents.dispose();
-    super.dispose();
+    return _events[day] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 145, 140),
-        //title: const Text('TimeKeeper'),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const SettingsScreen(),
-              ),
-            );
-          },
-          icon: const Icon(Icons.settings),
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(_selectedDay != null
-                ? _selectedDay!.toIso8601String().substring(0, 10)
-                : "TimeKeeper"),
-            if (_selectedDay != null)
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedDay = null;
-                  });
-                },
-                icon: const Icon(Icons.close),
-              ),
-          ],
-        ),
+        title: const Text('TimeKeeper'),
         actions: [
           IconButton(
-            onPressed: () async {
-              DateTime? newDate = await showDatePicker(
-                context: context,
-                initialDate: _selectedDay ?? DateTime.now(),
-                firstDate: DateTime(2020),
-                lastDate: DateTime(2222),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
               );
-              if (newDate != null) {
-                setState(() {
-                  _selectedDay = newDate;
-                });
-              }
             },
-            icon: const Icon(Icons.calendar_month),
+            icon: const Icon(Icons.settings),
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.only(
-          top: 30,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(
+            height: 2,
+          ),
+          Container(
+            height: 90,
+            width: MediaQuery.of(context).size.width,
+            color: const Color.fromARGB(255, 154, 171, 154),
+            child: Container(
+              padding: const EdgeInsets.only(top: 24, left: 8, right: 8),
+              child: const Text(
                 'Welcome! Select a date to view your data or press the plus button to add a new log.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16,
+                  color: Colors.white,
+                  fontSize: 17,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 400,
-              width: MediaQuery.of(context).size.width,
-              child: const CalendarWidget(),
-              // child: CalendarDatePicker(
-              //     initialDate: DateTime.now(),
-              //     firstDate: DateTime(2020),
-              //     lastDate: DateTime(2222),
-              //     onDateChanged: (DateTime value) {
-              //       _selectedDate = value;
-              //     }),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            height: 370,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: FloatingActionButton(
-                    backgroundColor: const Color.fromARGB(255, 85, 145, 140),
-                    child: const Icon(Icons.add, color: Colors.white),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const AddEventView()),
-                      );
-                    },
+                TableCalendar<Event>(
+                  eventLoader: _getEventsForDay,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  pageJumpingEnabled: true,
+                  headerStyle: const HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                  ),
+                  availableGestures: AvailableGestures.all,
+                  focusedDay: _focusedDay,
+                  firstDay: _firstDay,
+                  lastDay: _lastDay,
+                  calendarFormat: _calendarFormat,
+                  selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  onPageChanged: (focusedDay) {
+                    setState(() {
+                      _focusedDay = focusedDay;
+                    });
+                    _loadFirestoreEvents();
+                  },
+                  calendarStyle: const CalendarStyle(
+                    isTodayHighlighted: true,
+                    selectedDecoration: BoxDecoration(
+                      color: Colors.orange,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
               ],
             ),
-            // Expanded(
-            //   child: ValueListenableBuilder<List<Event>>(
-            //     valueListenable: _selectedEvents,
-            //     builder: (context, value, _) {
-            //       return ListView.builder(
-            //         itemCount: value.length,
-            //         itemBuilder: (context, index) {
-            //           return Container(
-            //             height: 200,
-            //             margin: const EdgeInsets.symmetric(
-            //               horizontal: 12.0,
-            //               vertical: 4.0,
-            //             ),
-            //             decoration: BoxDecoration(
-            //               border: Border.all(),
-            //               borderRadius: BorderRadius.circular(12.0),
-            //             ),
-            //             child: ListTile(
-            //               onTap: () => print('${value[index]}'),
-            //               title: Text('${value[index]}'),
-            //             ),
-            //           );
-            //         },
-            //       );
-            //     },
-            //   ),
-            // ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _selectedDay == null
-                  ? FirebaseFirestore.instance.collection('events').snapshots()
-                  : FirebaseFirestore.instance
-                      .collection('events')
-                      .where('date', isEqualTo: _selectedDay)
-                      .snapshots(),
-              builder: (context, snapshot) {
-                // handle errors
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                        'There was an error fetching the data: ${snapshot.error}'),
-                  );
-                }
-                // handle loading
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                List<Event> events =
-                    snapshot.data!.docs.map((e) => Event.fromJson(e)).toList();
-                return ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    Event event = events[index];
-                    return ListTile(
-                      title: Text(
-                        event.date.toIso8601String().substring(0, 10),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(255, 85, 145, 140),
+                  child: const Icon(Icons.add, color: Colors.white),
+                  onPressed: () async {
+                    final result = await Navigator.push<bool>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddEventView(
+                          selectedDate: _selectedDay,
+                        ),
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditEventView(event: event),
-                          ),
-                        );
-                      },
                     );
+                    if (result ?? false) {
+                      _loadFirestoreEvents();
+                    }
                   },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          // navigation to edit events
+          ..._getEventsForDay(_selectedDay).map(
+            (event) => GestureDetector(
+              onTap: () async {
+                Navigator.push<bool>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditEventView(event: event),
+                  ),
                 );
               },
+              child: ListTile(
+                title: Text(
+                  event.date.toString().substring(0, 10),
+                ),
+                subtitle: Text(
+                  'Regular hours: ${event.regularHours!}\nOvertime hours: ${event.overtimeHours}\nTotal hours: ${event.totalHours}\nMileage: ${event.mileage}\nNotes: ${event.notes}',
+                ),
+              ),
             ),
-            // Container(
-            //   padding: const EdgeInsets.only(
-            //     top: 50,
-            //     left: 20,
-            //     right: 20,
-            //   ),
-            //   child: Row(
-            //     children: [
-            //       const Text(
-            //         'Monthly Regular Hours Total: ',
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w400,
-            //         ),
-            //       ),
-            //       Expanded(
-            //         child: Container(),
-            //       ),
-            //       const Text('Amount'),
-            //     ],
-            //   ),
-            // ),
-            // Container(
-            //   padding: const EdgeInsets.only(
-            //     top: 20,
-            //     left: 20,
-            //     right: 20,
-            //   ),
-            //   child: Row(
-            //     children: [
-            //       const Text(
-            //         'Monthly Overtime Hours Total: ',
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w400,
-            //         ),
-            //       ),
-            //       Expanded(
-            //         child: Container(),
-            //       ),
-            //       const Text('Amount'),
-            //     ],
-            //   ),
-            // ),
-            // Container(
-            //   padding: const EdgeInsets.only(
-            //     top: 20,
-            //     left: 20,
-            //     right: 20,
-            //   ),
-            //   child: Row(
-            //     children: [
-            //       const Text(
-            //         'Monthly Hours Total: ',
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w400,
-            //         ),
-            //       ),
-            //       Expanded(
-            //         child: Container(),
-            //       ),
-            //       const Text('Amount'),
-            //     ],
-            //   ),
-            // ),
-            // Container(
-            //   padding: const EdgeInsets.only(
-            //     top: 20,
-            //     left: 20,
-            //     right: 20,
-            //   ),
-            //   child: Row(
-            //     children: [
-            //       const Text(
-            //         'Monthly Mileage Total: ',
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w400,
-            //         ),
-            //       ),
-            //       Expanded(
-            //         child: Container(),
-            //       ),
-            //       const Text('Amount'),
-            //     ],
-            //   ),
-            // ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

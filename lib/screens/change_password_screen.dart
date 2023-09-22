@@ -5,7 +5,6 @@ import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import '../auth/bloc/auth_bloc.dart';
 import '../auth/bloc/auth_event.dart';
 import '../auth/bloc/auth_state.dart';
-import '../auth/firebase_auth_provider.dart';
 import '../dialogs/error_dialog.dart';
 import '../dialogs/password_reset_email_sent_dialog.dart';
 
@@ -48,6 +47,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 247, 242, 236),
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 85, 145, 140),
           title: const Text('Reset password'),

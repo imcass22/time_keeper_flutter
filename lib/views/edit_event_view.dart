@@ -17,6 +17,7 @@ class _EditEventViewState extends State<EditEventView> {
   final TextEditingController regularHoursController = TextEditingController();
   final TextEditingController overtimeHoursController = TextEditingController();
   final TextEditingController mileageController = TextEditingController();
+  String totalHours = "0";
 
   @override
   void initState() {
@@ -26,6 +27,16 @@ class _EditEventViewState extends State<EditEventView> {
     regularHoursController.text = widget.event.regularHours!;
     overtimeHoursController.text = widget.event.overtimeHours!;
     mileageController.text = widget.event.mileage!;
+    totalHours = widget.event.totalHours!;
+  }
+
+  // method for calculation the sum of regular and overtime hours
+  void hoursSum() {
+    setState(() {
+      double? total = double.tryParse(regularHoursController.text)! +
+          double.tryParse(overtimeHoursController.text)!;
+      totalHours = total.toString();
+    });
   }
 
   @override
@@ -41,6 +52,7 @@ class _EditEventViewState extends State<EditEventView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: const Text('Edit Data'),
@@ -106,6 +118,7 @@ class _EditEventViewState extends State<EditEventView> {
                   SizedBox(
                     width: 70,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: regularHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -137,6 +150,7 @@ class _EditEventViewState extends State<EditEventView> {
                   SizedBox(
                     width: 70,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: overtimeHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -168,6 +182,7 @@ class _EditEventViewState extends State<EditEventView> {
                   SizedBox(
                     width: 70,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: mileageController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -204,7 +219,7 @@ class _EditEventViewState extends State<EditEventView> {
                   padding: const EdgeInsets.only(bottom: 15.0),
                   // Wrap user text in a container
                   child: TextFormField(
-                    onTap: () async {},
+                    keyboardType: TextInputType.text,
                     maxLines: 50,
                     controller: notesController,
                     decoration: const InputDecoration(
@@ -225,6 +240,7 @@ class _EditEventViewState extends State<EditEventView> {
               text: 'Save',
               color: const Color.fromARGB(255, 85, 145, 140),
               onPressed: () {
+                hoursSum();
                 FirebaseFirestore.instance
                     .collection('events')
                     .doc(widget.event.id)
@@ -234,6 +250,7 @@ class _EditEventViewState extends State<EditEventView> {
                   'overtime hours': overtimeHoursController.text,
                   'mileage': mileageController.text,
                   'notes': notesController.text,
+                  'total hours': totalHours,
                 });
                 Navigator.pop(context);
               },

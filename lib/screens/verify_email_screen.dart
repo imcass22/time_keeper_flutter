@@ -14,6 +14,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: const Text('Verify Email'),

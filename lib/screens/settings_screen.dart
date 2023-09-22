@@ -52,6 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 247, 242, 236),
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 85, 145, 140),
           leading: IconButton(

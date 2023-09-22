@@ -3,26 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 
 class AddEventView extends StatefulWidget {
-  const AddEventView({super.key});
+  const AddEventView({super.key, required this.selectedDate});
+
+  final DateTime selectedDate;
 
   @override
   State<AddEventView> createState() => _AddEventViewState();
 }
 
 class _AddEventViewState extends State<AddEventView> {
+  // use controllers to get what the user types
   final TextEditingController notesController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController regularHoursController = TextEditingController();
   final TextEditingController overtimeHoursController = TextEditingController();
   final TextEditingController mileageController = TextEditingController();
-
+  String totalHours = "0";
   DateTime? _selectedDate;
+
+  // double? regularHours = double.tryParse(regularHoursController);
+  // double? overtimeHours = double.tryParse(overtimeHoursController);
+  // double? totalHours = regularHours! + overtimeHours!;
 
   @override
   void initState() {
     super.initState();
     dateController.text =
         _selectedDate?.toIso8601String().substring(0, 10) ?? 'SelectDate';
+  }
+
+  // method for calculation the sum of regular and overtime hours
+  void hoursSum() {
+    setState(() {
+      double? total = double.tryParse(regularHoursController.text)! +
+          double.tryParse(overtimeHoursController.text)!;
+      totalHours = total.toString();
+    });
   }
 
   @override
@@ -38,6 +54,7 @@ class _AddEventViewState extends State<AddEventView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: Text(_selectedDate != null
@@ -107,6 +124,7 @@ class _AddEventViewState extends State<AddEventView> {
                   SizedBox(
                     width: 70,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: regularHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -138,6 +156,7 @@ class _AddEventViewState extends State<AddEventView> {
                   SizedBox(
                     width: 70,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: overtimeHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -169,6 +188,7 @@ class _AddEventViewState extends State<AddEventView> {
                   SizedBox(
                     width: 70,
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: mileageController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -205,7 +225,7 @@ class _AddEventViewState extends State<AddEventView> {
                   padding: const EdgeInsets.only(bottom: 15.0),
                   // Wrap user text in a container
                   child: TextFormField(
-                    onTap: () async {},
+                    keyboardType: TextInputType.text,
                     maxLines: 50,
                     controller: notesController,
                     decoration: const InputDecoration(
@@ -226,6 +246,8 @@ class _AddEventViewState extends State<AddEventView> {
               text: 'Add',
               color: const Color.fromARGB(255, 85, 145, 140),
               onPressed: () {
+                // calling method to calculate the total hours
+                hoursSum();
                 if (_selectedDate != null) {
                   FirebaseFirestore.instance.collection('events').add(
                     {
@@ -234,6 +256,7 @@ class _AddEventViewState extends State<AddEventView> {
                       'regular hours': regularHoursController.text,
                       'overtime hours': overtimeHoursController.text,
                       'mileage': mileageController.text,
+                      'total hours': totalHours,
                     },
                   );
                   Navigator.pop(context);
