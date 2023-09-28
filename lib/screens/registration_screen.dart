@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:time_keeper/screens/login_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import 'package:time_keeper/widgets/standard_textfield.dart';
 import '../auth/auth_exceptions.dart';
@@ -36,6 +38,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // error handling
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
         if (state is AuthStateRegistering) {
@@ -60,6 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           child: SingleChildScrollView(
             child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
@@ -113,9 +117,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       TextButton(
                         onPressed: () async {
                           // send user to login screen
-                          context.read<AuthBloc>().add(
-                                const AuthEventLogOut(),
-                              );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
                         },
                         child: const Text(
                           'Login here',

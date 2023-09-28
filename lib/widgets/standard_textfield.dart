@@ -28,13 +28,13 @@ class StandardTextField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Color.fromARGB(255, 227, 223, 223)),
           ),
           //when user clicks to type text, border will turn gray
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
+            borderSide: BorderSide(color: Color.fromARGB(255, 192, 185, 185)),
           ),
-          fillColor: Colors.grey.shade800,
+          fillColor: Color.fromARGB(255, 233, 229, 229),
           filled: true,
         ),
       ),

@@ -54,8 +54,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                const SizedBox(height: 20),
                 const Text(
-                    'If you forgot your password, enter your email and we will send you a password reset link'),
+                  'If you forgot your password, enter your email and we will send you a password reset link',
+                ),
+                const SizedBox(height: 20),
                 TextField(
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
@@ -65,6 +68,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     hintText: 'Your email address..',
                   ),
                 ),
+                const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
                     final email = _controller.text;
@@ -73,15 +77,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         .add(AuthEventForgotPassword(email: email));
                   },
                   child: const Text('Send me a password reset link'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    //sends user to login screen
-                    context.read<AuthBloc>().add(
-                          const AuthEventLogOut(),
-                        );
-                  },
-                  child: const Text('Back to login page'),
                 ),
               ],
             ),

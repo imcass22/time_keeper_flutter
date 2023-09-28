@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:time_keeper/screens/login_screen.dart';
+import 'package:time_keeper/screens/registration_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
-
 import '../auth/auth_exceptions.dart';
-import '../auth/auth_service.dart';
 import '../auth/bloc/auth_bloc.dart';
-import '../auth/bloc/auth_event.dart';
 import '../auth/bloc/auth_state.dart';
 import '../dialogs/error_dialog.dart';
 
@@ -52,6 +51,11 @@ class DeleteAccountScreen extends StatelessWidget {
               onPressed: () async {
                 // Delete user account
                 FirebaseAuth.instance.currentUser?.delete();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const RegistrationScreen(),
+                  ),
+                );
                 // context.read<AuthBloc>().add(
                 //       const AuthEventDelete(),
                 //     );

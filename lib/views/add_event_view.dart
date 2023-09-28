@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 
@@ -257,6 +258,8 @@ class _AddEventViewState extends State<AddEventView> {
                       'overtime hours': overtimeHoursController.text,
                       'mileage': mileageController.text,
                       'total hours': totalHours,
+                      'id': FirebaseAuth.instance.currentUser!
+                          .uid, // id for each individual user
                     },
                   );
                   Navigator.pop(context);

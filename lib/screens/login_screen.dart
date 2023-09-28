@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:time_keeper/screens/forgot_password_screen.dart';
+import 'package:time_keeper/screens/registration_screen.dart';
+import 'package:time_keeper/screens/verify_email_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import 'package:time_keeper/widgets/standard_textfield.dart';
 import 'package:time_keeper/firebase_options.dart';
@@ -38,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // error handling
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
         if (state is AuthStateLoggedOut) {
@@ -66,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 builder: (context, snapshot) {
                   return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 50),
@@ -113,9 +118,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 25.0),
                       TextButton(
                         onPressed: () {
-                          context.read<AuthBloc>().add(
-                                const AuthEventForgotPassword(),
-                              );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ForgotPasswordScreen(),
+                            ),
+                          );
                         },
                         child: const Text('I forgot my password'),
                       ),
@@ -128,9 +136,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(width: 4),
                           TextButton(
                             onPressed: () {
-                              context.read<AuthBloc>().add(
-                                    const AuthEventShouldRegister(),
-                                  );
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RegistrationScreen(),
+                                ),
+                              );
                             },
                             child: const Text(
                               'Register here',
