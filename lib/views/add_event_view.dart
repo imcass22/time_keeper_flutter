@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 
 class AddEventView extends StatefulWidget {
@@ -135,6 +136,11 @@ class _AddEventViewState extends State<AddEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Colors.grey,
                       ),
+                      // only allows numbers to be entered into the text field
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],
@@ -167,6 +173,11 @@ class _AddEventViewState extends State<AddEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Colors.grey,
                       ),
+                      // only allows numbers to be entered into the text field
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],
@@ -199,6 +210,11 @@ class _AddEventViewState extends State<AddEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Color.fromARGB(255, 218, 217, 217),
                       ),
+                      // only allows numbers to be entered into the text field
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:time_keeper/model/event.dart';
 import '../widgets/reuseable_elevated_button.dart';
 
@@ -128,6 +129,11 @@ class _EditEventViewState extends State<EditEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Colors.grey,
                       ),
+                      // only allows numbers to be entered into the text field
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],
@@ -160,6 +166,11 @@ class _EditEventViewState extends State<EditEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Colors.grey,
                       ),
+                      // only allows numbers to be entered into the text field
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],
@@ -192,6 +203,11 @@ class _EditEventViewState extends State<EditEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Color.fromARGB(255, 218, 217, 217),
                       ),
+                      // only allows numbers to be entered into the text field
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                   ),
                 ],
