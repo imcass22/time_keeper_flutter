@@ -6,7 +6,6 @@ import 'package:time_keeper/widgets/reuseable_outlined_button.dart';
 import '../auth/bloc/auth_bloc.dart';
 import '../auth/bloc/auth_event.dart';
 import '../auth/bloc/auth_state.dart';
-import '../auth/firebase_auth_provider.dart';
 import '../dialogs/error_dialog.dart';
 import '../dialogs/password_reset_email_sent_dialog.dart';
 import '../enums/menu_action.dart';
@@ -89,6 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 2),
             Container(
               height: 40,
               width: MediaQuery.of(context).size.width,
@@ -165,7 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             //   onPressed: () {},
             // ),
             // const SizedBox(height: 70),
-            ReuseableOutlinedButton(
+            ReuseableElevatedButton(
               text: 'Reset Password',
               color: const Color.fromARGB(255, 62, 61, 61),
               onPressed: () {

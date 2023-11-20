@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:time_keeper/auth/auth_user.dart';
+import 'package:time_keeper/screens/range_picker.dart';
 import 'package:time_keeper/screens/settings_screen.dart';
 import 'package:time_keeper/views/add_event_view.dart';
 import 'package:time_keeper/views/edit_event_view.dart';
+import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import '../model/event.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -108,11 +109,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               height: 2,
             ),
             Container(
-              height: 90,
+              height: 70,
               width: MediaQuery.of(context).size.width,
               color: const Color.fromARGB(255, 154, 171, 154),
               child: Container(
-                padding: const EdgeInsets.only(top: 24, left: 8, right: 8),
+                padding: const EdgeInsets.only(top: 15, left: 8, right: 8),
                 child: const Text(
                   'Welcome! Select a date to view your data or press the plus button to add a new log.',
                   textAlign: TextAlign.center,
@@ -128,17 +129,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
               height: 20,
             ),
             SizedBox(
-              height: 370,
+              height: 390,
               width: MediaQuery.of(context).size.width,
               child: ListView(
                 children: [
                   TableCalendar<Event>(
+                    // property that shows the calendar events
                     eventLoader: _getEventsForDay,
                     startingDayOfWeek: StartingDayOfWeek.monday,
                     pageJumpingEnabled: true,
                     headerStyle: const HeaderStyle(
                       formatButtonVisible: false,
                       titleCentered: true,
+                      titleTextStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 19.0),
                     ),
                     availableGestures: AvailableGestures.all,
                     focusedDay: _focusedDay,
@@ -147,10 +153,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     calendarFormat: _calendarFormat,
                     selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
                     onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                      });
+                      if (!isSameDay(_selectedDay, selectedDay)) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                        });
+                      }
                     },
                     onPageChanged: (focusedDay) {
                       setState(() {
@@ -194,7 +202,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 15),
             // navigation to edit events
             ..._getEventsForDay(_selectedDay).map(
               (event) => GestureDetector(
@@ -209,11 +216,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: ListTile(
                   title: Text(
                     event.date.toString().substring(0, 10),
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w500),
                   ),
                   subtitle: Text(
                     'Regular hours: ${event.regularHours!}\nOvertime hours: ${event.overtimeHours}\nTotal hours: ${event.totalHours}\nMileage: ${event.mileage}\nNotes: ${event.notes}',
+                    style: const TextStyle(color: Colors.black87),
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color.fromARGB(255, 55, 82, 117),
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const RangePicker(),
+                    ),
+                  );
+                },
+                child: const Text('Click here to calculate your total hours'),
               ),
             ),
           ],

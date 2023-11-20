@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_keeper/screens/forgot_password_screen.dart';
 import 'package:time_keeper/screens/registration_screen.dart';
-import 'package:time_keeper/screens/verify_email_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import 'package:time_keeper/widgets/standard_textfield.dart';
 import 'package:time_keeper/firebase_options.dart';
@@ -91,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _emailController,
                         obscureText: false,
                         hintText: 'Enter your email here',
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 25),
                       //password textfield from components/my_textfield.dart
@@ -98,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _passwordController,
                         hintText: 'Enter your password here',
                         obscureText: true,
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 25.0),
                       //Register

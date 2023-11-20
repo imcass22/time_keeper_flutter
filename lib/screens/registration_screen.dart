@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_keeper/screens/login_screen.dart';
@@ -84,6 +83,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     controller: _emailController,
                     obscureText: false,
                     hintText: 'Enter your email here',
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 25),
                   //password textfield from components/my_textfield.dart
@@ -91,6 +91,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     controller: _passwordController,
                     hintText: 'Enter your password here',
                     obscureText: true,
+                    keyboardType: TextInputType.text,
                   ),
                   const SizedBox(height: 25.0),
                   //Register

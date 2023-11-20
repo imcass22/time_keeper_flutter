@@ -23,15 +23,11 @@ class _AddEventViewState extends State<AddEventView> {
   String totalHours = "0";
   DateTime? _selectedDate;
 
-  // double? regularHours = double.tryParse(regularHoursController);
-  // double? overtimeHours = double.tryParse(overtimeHoursController);
-  // double? totalHours = regularHours! + overtimeHours!;
-
   @override
   void initState() {
     super.initState();
     dateController.text =
-        _selectedDate?.toIso8601String().substring(0, 10) ?? 'SelectDate';
+        _selectedDate?.toIso8601String().substring(0, 10) ?? 'Select Date';
   }
 
   // method for calculation the sum of regular and overtime hours
