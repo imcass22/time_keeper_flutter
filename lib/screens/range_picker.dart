@@ -50,7 +50,6 @@ class _RangePickerState extends State<RangePicker> {
         .where('date', isLessThanOrEqualTo: endDate)
         .get()
         .then((querySnapshot) {
-      //double totalRegularHours = 0;
       querySnapshot.docs.forEach((element) async {
         double? value =
             double.tryParse(element.data()['overtime hours'].toString()) ?? 0;
@@ -138,6 +137,9 @@ class _RangePickerState extends State<RangePicker> {
                   text: 'Calculate Hours',
                   color: const Color.fromARGB(255, 55, 82, 117),
                   onPressed: () async {
+                    _totalRegularHours = 0;
+                    _totalOvertimeHours = 0;
+                    _totalTotalHours = 0;
                     await sumRegularHours(startDate, endDate);
                     await sumOvertimeHours(startDate, endDate);
                     await sumTotalHours(startDate, endDate);
