@@ -96,9 +96,7 @@ class _RangePickerState extends State<RangePicker> {
     final startDate = dateRange.start;
     final endDate = dateRange.end;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: const Text('TimeKeeper'),
       ),
       body: SingleChildScrollView(
@@ -108,7 +106,7 @@ class _RangePickerState extends State<RangePicker> {
             Container(
               height: 60,
               width: MediaQuery.of(context).size.width,
-              color: const Color.fromARGB(255, 154, 171, 154),
+              color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
                 padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
                 child: const Text(
@@ -135,7 +133,7 @@ class _RangePickerState extends State<RangePicker> {
                 const SizedBox(height: 40),
                 ReuseableElevatedButton(
                   text: 'Calculate Hours',
-                  color: const Color.fromARGB(255, 55, 82, 117),
+                  color: const Color.fromARGB(255, 37, 33, 41),
                   onPressed: () async {
                     _totalRegularHours = 0;
                     _totalOvertimeHours = 0;
@@ -153,7 +151,7 @@ class _RangePickerState extends State<RangePicker> {
                   padding: const EdgeInsets.all(22),
                   child: ListTile(
                     title: Text(
-                      'Total Regular hours: $_totalRegularHours\nTotal Overtime hours: $_totalOvertimeHours\nTotal hours: $_totalTotalHours',
+                      'Total Regular Hours: $_totalRegularHours\n\nTotal Overtime Hours: $_totalOvertimeHours\n\nTotal Hours: $_totalTotalHours',
                       style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 18,

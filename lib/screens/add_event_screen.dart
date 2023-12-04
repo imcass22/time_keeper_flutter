@@ -4,23 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 
-class AddEventView extends StatefulWidget {
-  const AddEventView({super.key, required this.selectedDate});
+class AddEventScreen extends StatefulWidget {
+  const AddEventScreen({super.key, required this.selectedDate});
 
   final DateTime selectedDate;
 
   @override
-  State<AddEventView> createState() => _AddEventViewState();
+  State<AddEventScreen> createState() => _AddEventScreenState();
 }
 
-class _AddEventViewState extends State<AddEventView> {
+class _AddEventScreenState extends State<AddEventScreen> {
   // use controllers to get what the user types
-  final TextEditingController notesController = TextEditingController();
+  TextEditingController? notesController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
-  final TextEditingController regularHoursController = TextEditingController();
-  final TextEditingController overtimeHoursController = TextEditingController();
-  final TextEditingController mileageController = TextEditingController();
-  String totalHours = "0";
+  TextEditingController regularHoursController = TextEditingController();
+  TextEditingController overtimeHoursController = TextEditingController();
+  TextEditingController? mileageController = TextEditingController();
+  String totalHours = '0.00';
   DateTime? _selectedDate;
 
   @override
@@ -33,8 +33,8 @@ class _AddEventViewState extends State<AddEventView> {
   // method for calculation the sum of regular and overtime hours
   void hoursSum() {
     setState(() {
-      double? total = double.tryParse(regularHoursController.text)! +
-          double.tryParse(overtimeHoursController.text)!;
+      double total = double.tryParse(overtimeHoursController.text)! +
+          double.tryParse(regularHoursController.text)!;
       totalHours = total.toString();
     });
   }
@@ -42,19 +42,17 @@ class _AddEventViewState extends State<AddEventView> {
   @override
   void dispose() {
     super.dispose();
-    notesController.dispose();
+    notesController?.dispose();
     regularHoursController.dispose();
     overtimeHoursController.dispose();
-    mileageController.dispose();
+    mileageController?.dispose();
     dateController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: Text(_selectedDate != null
             ? _selectedDate!.toIso8601String().substring(0, 10)
             : "TimeKeeper"),
@@ -66,7 +64,7 @@ class _AddEventViewState extends State<AddEventView> {
             Container(
               height: 40,
               width: MediaQuery.of(context).size.width,
-              color: const Color.fromARGB(255, 154, 171, 154),
+              color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
                 padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
                 child: const Text(
@@ -120,9 +118,10 @@ class _AddEventViewState extends State<AddEventView> {
                     child: Container(),
                   ),
                   SizedBox(
-                    width: 70,
+                    width: 80,
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       controller: regularHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -132,10 +131,11 @@ class _AddEventViewState extends State<AddEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Colors.grey,
                       ),
-                      // only allows numbers to be entered into the text field
+                      // only allows numbers to be entered into the text field in decimal form
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'),
+                        ),
                       ],
                     ),
                   ),
@@ -157,9 +157,10 @@ class _AddEventViewState extends State<AddEventView> {
                     child: Container(),
                   ),
                   SizedBox(
-                    width: 70,
+                    width: 80,
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       controller: overtimeHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -169,10 +170,11 @@ class _AddEventViewState extends State<AddEventView> {
                         border: OutlineInputBorder(),
                         fillColor: Colors.grey,
                       ),
-                      // only allows numbers to be entered into the text field
+                      // only allows numbers to be entered into the text field in decimal form
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'),
+                        ),
                       ],
                     ),
                   ),
@@ -194,22 +196,26 @@ class _AddEventViewState extends State<AddEventView> {
                     child: Container(),
                   ),
                   SizedBox(
-                    width: 70,
+                    width: 80,
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
+                      //maxLength: 5,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       controller: mileageController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
                           maxHeight: 30,
-                          maxWidth: 40,
+                          maxWidth: 60,
                         ),
                         border: OutlineInputBorder(),
                         fillColor: Color.fromARGB(255, 218, 217, 217),
                       ),
-                      // only allows numbers to be entered into the text field
+                      // only allows numbers to be entered into the text field in decimal form
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                          // allows for decimal numbers
+                          RegExp(r'^(\d+)?\.?\d{0,2}'),
+                        ),
                       ],
                     ),
                   ),
@@ -257,18 +263,34 @@ class _AddEventViewState extends State<AddEventView> {
             const SizedBox(height: 40),
             ReuseableElevatedButton(
               text: 'Add',
-              color: const Color.fromARGB(255, 85, 145, 140),
+              color: const Color.fromARGB(255, 37, 33, 41),
               onPressed: () {
-                // calling method to calculate the total hours
-                hoursSum();
+                // checking if the user has entered data for the date, regular hours, and overtime hours fields. If not, a snack bar message will display
+                if (regularHoursController.text.isEmpty ||
+                    overtimeHoursController.text.isEmpty ||
+                    // dateController is not empty it is set to 'Select Date'
+                    dateController.text == 'Select Date') {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Please enter a date and provide data for regular and overtime hours.'),
+                      duration: Duration(seconds: 5),
+                    ),
+                  );
+                } else {
+                  // calling method to calculate the total hours after user enters data in both regular hours and overtime hours text fields
+                  hoursSum();
+                }
                 if (_selectedDate != null) {
                   FirebaseFirestore.instance.collection('events').add(
                     {
-                      'notes': notesController.text,
+                      // allows for user not to enter any nots
+                      'notes': notesController?.text ?? '',
                       'date': _selectedDate,
                       'regular hours': regularHoursController.text,
                       'overtime hours': overtimeHoursController.text,
-                      'mileage': mileageController.text,
+                      // allows for user to not enter mileage
+                      'mileage': mileageController?.text ?? 0,
                       'total hours': totalHours,
                       'id': FirebaseAuth.instance.currentUser!
                           .uid, // id for each individual user

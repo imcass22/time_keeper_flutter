@@ -55,9 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 247, 242, 236),
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 85, 145, 140),
           title: const Text('Login'),
         ),
         body: SafeArea(
@@ -104,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       //Register
                       ReuseableElevatedButton(
                         text: 'Login',
-                        color: const Color.fromARGB(255, 55, 82, 117),
+                        color: const Color.fromARGB(255, 37, 33, 41),
                         onPressed: () {
                           final email = _emailController.text;
                           final password = _passwordController.text;

@@ -4,15 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:time_keeper/model/event.dart';
 import '../widgets/reuseable_elevated_button.dart';
 
-class EditEventView extends StatefulWidget {
+class EditEventScreen extends StatefulWidget {
   final Event event;
-  const EditEventView({super.key, required this.event});
+  const EditEventScreen({super.key, required this.event});
 
   @override
-  State<EditEventView> createState() => _EditEventViewState();
+  State<EditEventScreen> createState() => _EditEventScreenState();
 }
 
-class _EditEventViewState extends State<EditEventView> {
+class _EditEventScreenState extends State<EditEventScreen> {
   final TextEditingController notesController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController regularHoursController = TextEditingController();
@@ -53,9 +53,7 @@ class _EditEventViewState extends State<EditEventView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: const Text('Edit Data'),
       ),
       body: SingleChildScrollView(
@@ -65,7 +63,7 @@ class _EditEventViewState extends State<EditEventView> {
             Container(
               height: 40,
               width: MediaQuery.of(context).size.width,
-              color: const Color.fromARGB(255, 154, 171, 154),
+              color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
                 padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
                 child: const Text(
@@ -117,9 +115,10 @@ class _EditEventViewState extends State<EditEventView> {
                     child: Container(),
                   ),
                   SizedBox(
-                    width: 70,
+                    width: 80,
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       controller: regularHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -131,8 +130,9 @@ class _EditEventViewState extends State<EditEventView> {
                       ),
                       // only allows numbers to be entered into the text field
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'),
+                        ),
                       ],
                     ),
                   ),
@@ -154,9 +154,10 @@ class _EditEventViewState extends State<EditEventView> {
                     child: Container(),
                   ),
                   SizedBox(
-                    width: 70,
+                    width: 80,
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       controller: overtimeHoursController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -168,8 +169,9 @@ class _EditEventViewState extends State<EditEventView> {
                       ),
                       // only allows numbers to be entered into the text field
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'),
+                        ),
                       ],
                     ),
                   ),
@@ -191,9 +193,10 @@ class _EditEventViewState extends State<EditEventView> {
                     child: Container(),
                   ),
                   SizedBox(
-                    width: 70,
+                    width: 80,
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       controller: mileageController,
                       decoration: const InputDecoration(
                         constraints: BoxConstraints(
@@ -205,8 +208,9 @@ class _EditEventViewState extends State<EditEventView> {
                       ),
                       // only allows numbers to be entered into the text field
                       inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        FilteringTextInputFormatter.digitsOnly,
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'),
+                        ),
                       ],
                     ),
                   ),
@@ -254,7 +258,7 @@ class _EditEventViewState extends State<EditEventView> {
             const SizedBox(height: 40),
             ReuseableElevatedButton(
               text: 'Save',
-              color: const Color.fromARGB(255, 85, 145, 140),
+              color: const Color.fromARGB(255, 37, 33, 41),
               onPressed: () {
                 hoursSum();
                 FirebaseFirestore.instance

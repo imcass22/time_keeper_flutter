@@ -53,9 +53,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 247, 242, 236),
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 85, 145, 140),
           title: const Text('Register'),
         ),
         body: SafeArea(
@@ -97,7 +95,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   //Register
                   ReuseableElevatedButton(
                     text: 'Register',
-                    color: const Color.fromARGB(255, 55, 82, 117),
+                    color: const Color.fromARGB(255, 37, 33, 41),
                     onPressed: () {
                       final email = _emailController.text;
                       final password = _passwordController.text;

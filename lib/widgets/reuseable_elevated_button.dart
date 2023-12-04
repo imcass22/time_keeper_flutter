@@ -17,7 +17,7 @@ class ReuseableElevatedButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(350, 50),
-          backgroundColor: color, //const Color.fromARGB(255, 151, 68, 62),
+          backgroundColor: color,
           foregroundColor: Colors.white,
         ),
         onPressed: onPressed,

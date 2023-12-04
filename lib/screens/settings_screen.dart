@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_keeper/screens/delete_account_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
-import 'package:time_keeper/widgets/reuseable_outlined_button.dart';
 import '../auth/bloc/auth_bloc.dart';
 import '../auth/bloc/auth_event.dart';
 import '../auth/bloc/auth_state.dart';
@@ -51,9 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 247, 242, 236),
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 85, 145, 140),
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -92,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               height: 40,
               width: MediaQuery.of(context).size.width,
-              color: const Color.fromARGB(255, 134, 150, 134),
+              color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
                 padding: const EdgeInsets.only(top: 10, bottom: 10, left: 26),
                 child: const Text(
@@ -116,58 +113,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-            // const Padding(
-            //   padding: EdgeInsets.only(left: 26.0, top: 30.0, bottom: 10.0),
-            //   child: Text(
-            //     'First name',
-            //     style: TextStyle(
-            //       fontSize: 16,
-            //     ),
-            //   ),
-            // ),
-            // StandardTextField(
-            //   controller: _firstNameController,
-            //   hintText: '',
-            //   obscureText: false,
-            // ),
-            // const Padding(
-            //   padding: EdgeInsets.only(left: 26.0, top: 30.0, bottom: 10.0),
-            //   child: Text(
-            //     'Last name',
-            //     style: TextStyle(
-            //       fontSize: 16,
-            //     ),
-            //   ),
-            // ),
-            // StandardTextField(
-            //   controller: _lastNameController,
-            //   hintText: '',
-            //   obscureText: false,
-            // ),
-            // const Padding(
-            //   padding: EdgeInsets.only(left: 26.0, top: 30.0, bottom: 10.0),
-            //   child: Text(
-            //     'Email',
-            //     style: TextStyle(
-            //       fontSize: 16,
-            //     ),
-            //   ),
-            // ),
-            // StandardTextField(
-            //   controller: _emailController,
-            //   hintText: '',
-            //   obscureText: false,
-            // ),
-            // const SizedBox(height: 40.0),
-            // ReuseableElevatedButton(
-            //   text: 'Save',
-            //   color: const Color.fromARGB(255, 20, 92, 151),
-            //   onPressed: () {},
-            // ),
-            // const SizedBox(height: 70),
             ReuseableElevatedButton(
               text: 'Reset Password',
-              color: const Color.fromARGB(255, 62, 61, 61),
+              color: const Color.fromARGB(255, 37, 33, 41),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(

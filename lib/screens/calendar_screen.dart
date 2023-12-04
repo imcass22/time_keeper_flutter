@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:time_keeper/screens/range_picker.dart';
 import 'package:time_keeper/screens/settings_screen.dart';
-import 'package:time_keeper/views/add_event_view.dart';
-import 'package:time_keeper/views/edit_event_view.dart';
-import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
+import 'package:time_keeper/screens/add_event_screen.dart';
+import 'package:time_keeper/screens/edit_event_screen.dart';
 import '../model/event.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -84,9 +83,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 247, 242, 236),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 85, 145, 140),
         title: const Text('TimeKeeper'),
         actions: [
           IconButton(
@@ -101,6 +98,46 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomAppBar(
+        color: const Color.fromARGB(255, 37, 33, 41),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 5, left: 100),
+          child: Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const RangePicker(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Calculate Total Hours',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15),
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const RangePicker(),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.calculate,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -111,7 +148,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Container(
               height: 70,
               width: MediaQuery.of(context).size.width,
-              color: const Color.fromARGB(255, 154, 171, 154),
+              color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
                 padding: const EdgeInsets.only(top: 15, left: 8, right: 8),
                 child: const Text(
@@ -142,7 +179,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       formatButtonVisible: false,
                       titleCentered: true,
                       titleTextStyle: TextStyle(
-                          color: Colors.black,
+                          color: Color.fromARGB(255, 37, 33, 41),
                           fontWeight: FontWeight.w600,
                           fontSize: 19.0),
                     ),
@@ -169,7 +206,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     calendarStyle: const CalendarStyle(
                       isTodayHighlighted: true,
                       selectedDecoration: BoxDecoration(
-                        color: Colors.orange,
+                        color: Color.fromARGB(255, 213, 94, 80),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -183,13 +220,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: FloatingActionButton(
-                    backgroundColor: const Color.fromARGB(255, 85, 145, 140),
+                    heroTag: 'button1',
+                    backgroundColor: const Color.fromARGB(255, 37, 33, 41),
                     child: const Icon(Icons.add, color: Colors.white),
                     onPressed: () async {
                       final result = await Navigator.push<bool>(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddEventView(
+                          builder: (context) => AddEventScreen(
                             selectedDate: _selectedDay,
                           ),
                         ),
@@ -209,7 +247,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   Navigator.push<bool>(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => EditEventView(event: event),
+                      builder: (_) => EditEventScreen(event: event),
                     ),
                   );
                 },
@@ -217,33 +255,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   title: Text(
                     event.date.toString().substring(0, 10),
                     style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18),
                   ),
                   subtitle: Text(
                     'Regular hours: ${event.regularHours!}\nOvertime hours: ${event.overtimeHours}\nTotal hours: ${event.totalHours}\nMileage: ${event.mileage}\nNotes: ${event.notes}',
-                    style: const TextStyle(color: Colors.black87),
+                    style: const TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color.fromARGB(255, 55, 82, 117),
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const RangePicker(),
-                    ),
-                  );
-                },
-                child: const Text('Click here to calculate your total hours'),
               ),
             ),
           ],

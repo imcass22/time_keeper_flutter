@@ -21,7 +21,13 @@ void main() async {
           create: (context) => AuthBloc(FirebaseAuthProvider()),
           child: MaterialApp(
             theme: ThemeData(
-              primarySwatch: Colors.teal,
+              colorScheme:
+                  // Color needed to change the arrows on the calendar from blue
+                  ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey),
+              scaffoldBackgroundColor: const Color.fromARGB(255, 247, 242, 236),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Color.fromARGB(255, 37, 33, 41),
+              ),
             ),
             home: const AuthPage(),
           ),
