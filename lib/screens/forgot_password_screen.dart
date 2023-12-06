@@ -63,8 +63,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   autocorrect: false,
                   autofocus: true,
                   controller: _controller,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Your email address..',
+                    hintStyle: TextStyle(
+                      color: Colors.grey[500],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -75,7 +78,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         .read<AuthBloc>()
                         .add(AuthEventForgotPassword(email: email));
                   },
-                  child: const Text('Send me a password reset link'),
+                  child: const Text(
+                    'Send me a password reset link',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 55, 82, 117),
+                    ),
+                  ),
                 ),
               ],
             ),

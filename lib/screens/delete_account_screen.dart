@@ -34,7 +34,7 @@ class DeleteAccountScreen extends StatelessWidget {
         body: Column(
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 50, bottom: 50, left: 20),
+              padding: EdgeInsets.only(top: 100, bottom: 50, left: 5),
               child: Text(
                 'Are you sure you would like to delete your account?',
                 style: TextStyle(
@@ -43,6 +43,7 @@ class DeleteAccountScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 40),
             ReuseableElevatedButton(
               text: 'Yes',
               color: const Color.fromARGB(255, 151, 68, 62),

@@ -121,12 +121,15 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           const TextInputType.numberWithOptions(decimal: true),
                       controller: regularHoursController,
                       decoration: const InputDecoration(
+                        // to positon text input by user in text box
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
                         constraints: BoxConstraints(
                           maxHeight: 30,
                           maxWidth: 40,
                         ),
                         border: OutlineInputBorder(),
-                        fillColor: Colors.grey,
+                        //fillColor: Colors.grey,
                       ),
                       // only allows numbers to be entered into the text field
                       inputFormatters: <TextInputFormatter>[
@@ -160,6 +163,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           const TextInputType.numberWithOptions(decimal: true),
                       controller: overtimeHoursController,
                       decoration: const InputDecoration(
+                        // to positon text input by user in text box
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
                         constraints: BoxConstraints(
                           maxHeight: 30,
                           maxWidth: 40,
@@ -199,6 +205,9 @@ class _EditEventScreenState extends State<EditEventScreen> {
                           const TextInputType.numberWithOptions(decimal: true),
                       controller: mileageController,
                       decoration: const InputDecoration(
+                        // to positon text input by user in text box
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
                         constraints: BoxConstraints(
                           maxHeight: 30,
                           maxWidth: 40,

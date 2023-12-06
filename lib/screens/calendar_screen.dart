@@ -83,6 +83,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        backgroundColor: const Color.fromARGB(255, 37, 33, 41),
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () async {
+          final result = await Navigator.push<bool>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddEventScreen(
+                selectedDate: _selectedDay,
+              ),
+            ),
+          );
+          if (result ?? false) {
+            _loadFirestoreEvents();
+          }
+        },
+      ),
       appBar: AppBar(
         title: const Text('TimeKeeper'),
         actions: [
@@ -100,8 +119,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color.fromARGB(255, 37, 33, 41),
+        notchMargin: 4,
+        elevation: 0,
+        shape: const AutomaticNotchedShape(
+          RoundedRectangleBorder(),
+          StadiumBorder(),
+        ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 5, left: 100),
+          padding: const EdgeInsets.only(top: 20, left: 100),
           child: Row(
             children: [
               TextButton(
@@ -115,7 +140,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: const Text(
                   'Calculate Total Hours',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 247, 242, 236),
                     fontSize: 16,
                   ),
                 ),
@@ -131,7 +156,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 },
                 icon: const Icon(
                   Icons.calculate,
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 247, 242, 236),
                 ),
               ),
             ],
@@ -150,12 +175,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
               width: MediaQuery.of(context).size.width,
               color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
-                padding: const EdgeInsets.only(top: 15, left: 8, right: 8),
+                padding: const EdgeInsets.only(top: 10, left: 8, right: 8),
                 child: const Text(
                   'Welcome! Select a date to view your data or press the plus button to add a new log.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 247, 242, 236),
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
                   ),
@@ -214,32 +239,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: FloatingActionButton(
-                    heroTag: 'button1',
-                    backgroundColor: const Color.fromARGB(255, 37, 33, 41),
-                    child: const Icon(Icons.add, color: Colors.white),
-                    onPressed: () async {
-                      final result = await Navigator.push<bool>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddEventScreen(
-                            selectedDate: _selectedDay,
-                          ),
-                        ),
-                      );
-                      if (result ?? false) {
-                        _loadFirestoreEvents();
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     Padding(
+            //       padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            //       child: FloatingActionButton(
+            //         backgroundColor: const Color.fromARGB(255, 37, 33, 41),
+            //         child: const Icon(Icons.add, color: Colors.white),
+            //         onPressed: () async {
+            //           final result = await Navigator.push<bool>(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => AddEventScreen(
+            //                 selectedDate: _selectedDay,
+            //               ),
+            //             ),
+            //           );
+            //           if (result ?? false) {
+            //             _loadFirestoreEvents();
+            //           }
+            //         },
+            //       ),
+            //     ),
+            //   ],
+            // ),
             // navigation to edit events
             ..._getEventsForDay(_selectedDay).map(
               (event) => GestureDetector(

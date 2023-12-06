@@ -91,7 +91,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: MediaQuery.of(context).size.width,
               color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
-                padding: const EdgeInsets.only(top: 10, bottom: 10, left: 26),
+                padding: const EdgeInsets.only(top: 8, bottom: 10, left: 40),
                 child: const Text(
                   'Account',
                   style: TextStyle(

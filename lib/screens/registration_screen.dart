@@ -124,6 +124,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         },
                         child: const Text(
                           'Login here',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 55, 82, 117),
+                          ),
                         ),
                       ),
                     ],

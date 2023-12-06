@@ -124,7 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           );
                         },
-                        child: const Text('I forgot my password'),
+                        child: const Text(
+                          'I forgot my password',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 55, 82, 117),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 25.0),
                       //Wrap text widget in a row since the column is centered, then can the allignment to the end
@@ -144,6 +149,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: const Text(
                               'Register here',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 55, 82, 117),
+                              ),
                             ),
                           ),
                         ],

@@ -62,11 +62,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
           children: [
             const SizedBox(height: 2),
             Container(
-              height: 40,
+              height: 50,
               width: MediaQuery.of(context).size.width,
               color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
-                padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20),
+                padding: const EdgeInsets.only(top: 12, bottom: 10, left: 22),
                 child: const Text(
                   'Select a date and enter your data below: ',
                   style: TextStyle(
@@ -124,12 +124,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           const TextInputType.numberWithOptions(decimal: true),
                       controller: regularHoursController,
                       decoration: const InputDecoration(
+                        // to positon text input by user in text box
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
                         constraints: BoxConstraints(
                           maxHeight: 30,
                           maxWidth: 40,
                         ),
                         border: OutlineInputBorder(),
-                        fillColor: Colors.grey,
+                        //fillColor: Colors.grey,
                       ),
                       // only allows numbers to be entered into the text field in decimal form
                       inputFormatters: <TextInputFormatter>[
@@ -163,6 +166,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           const TextInputType.numberWithOptions(decimal: true),
                       controller: overtimeHoursController,
                       decoration: const InputDecoration(
+                        // to positon text input by user in text box
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
                         constraints: BoxConstraints(
                           maxHeight: 30,
                           maxWidth: 40,
@@ -198,11 +204,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   SizedBox(
                     width: 80,
                     child: TextFormField(
-                      //maxLength: 5,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       controller: mileageController,
                       decoration: const InputDecoration(
+                        // to positon text input by user in text box
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 10.0),
                         constraints: BoxConstraints(
                           maxHeight: 30,
                           maxWidth: 60,
@@ -247,14 +255,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     keyboardType: TextInputType.text,
                     maxLines: 50,
                     controller: notesController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Enter your notes here...',
-                      constraints: BoxConstraints(
+                      // change color of hint text
+                      hintStyle: TextStyle(
+                        color: Colors.grey[500],
+                      ),
+                      constraints: const BoxConstraints(
                         maxHeight: 200,
                         maxWidth: 390,
                       ),
-                      border: OutlineInputBorder(),
-                      fillColor: Color.fromARGB(255, 226, 222, 222),
+                      border: const OutlineInputBorder(),
+                      fillColor: const Color.fromARGB(255, 226, 222, 222),
                     ),
                   ),
                 ),

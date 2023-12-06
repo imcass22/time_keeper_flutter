@@ -104,17 +104,18 @@ class _RangePickerState extends State<RangePicker> {
           children: [
             const SizedBox(height: 2),
             Container(
-              height: 60,
+              height: 70,
               width: MediaQuery.of(context).size.width,
               color: const Color.fromARGB(255, 84, 77, 88),
               child: Container(
-                padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
+                padding: const EdgeInsets.only(
+                    top: 10, left: 8, right: 8, bottom: 10),
                 child: const Text(
                   'Select a range of dates to display a total of hours worked.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

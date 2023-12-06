@@ -31,6 +31,9 @@ class StandardTextField extends StatelessWidget {
         textCapitalization: TextCapitalization.none,
         decoration: InputDecoration(
           hintText: hintText,
+          hintStyle: TextStyle(
+            color: Colors.grey[500],
+          ),
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color.fromARGB(255, 227, 223, 223)),
           ),

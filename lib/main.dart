@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:time_keeper/auth/auth_page.dart';
 import 'package:time_keeper/auth/bloc/auth_bloc.dart';
 import 'package:time_keeper/auth/firebase_auth_provider.dart';
+import 'package:time_keeper/screens/forgot_password_screen.dart';
+import 'package:time_keeper/screens/login_screen.dart';
+import 'package:time_keeper/screens/verify_email_screen.dart';
 
 void main() async {
   //ensures the orientation works as intended
@@ -20,13 +23,27 @@ void main() async {
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(FirebaseAuthProvider()),
           child: MaterialApp(
-            theme: ThemeData(
+            theme: ThemeData.light().copyWith(
+              inputDecorationTheme: const InputDecorationTheme(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black12, width: 2.0),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.black12,
+                    width: 2.0,
+                  ),
+                ),
+              ),
               colorScheme:
                   // Color needed to change the arrows on the calendar from blue
-                  ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey),
+                  ColorScheme.fromSwatch().copyWith(
+                primary: Colors.grey[500],
+              ),
               scaffoldBackgroundColor: const Color.fromARGB(255, 247, 242, 236),
               appBarTheme: const AppBarTheme(
                 backgroundColor: Color.fromARGB(255, 37, 33, 41),
+                foregroundColor: Color.fromARGB(255, 247, 242, 236),
               ),
             ),
             home: const AuthPage(),

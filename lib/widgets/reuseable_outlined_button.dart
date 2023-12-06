@@ -19,6 +19,10 @@ class ReuseableOutlinedButton extends StatelessWidget {
           minimumSize: const Size(350, 50),
           backgroundColor: color,
           foregroundColor: Colors.black87,
+          side: BorderSide(
+            width: 1.0,
+            color: Colors.grey[500]!,
+          ),
         ),
         onPressed: onPressed,
         child: Text(text),
