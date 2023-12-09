@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class StandardTextField extends StatelessWidget {
   const StandardTextField({
@@ -7,12 +8,16 @@ class StandardTextField extends StatelessWidget {
     required this.hintText,
     required this.obscureText,
     required this.keyboardType,
+    this.inputFormatters,
+    this.validator,
   });
 
   // ignore: prefer_typing_uninitialized_variables
   final controller;
   final String hintText;
   final bool obscureText;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
   // ignore: prefer_typing_uninitialized_variables
   final keyboardType;
 
@@ -20,10 +25,12 @@ class StandardTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextField(
+      child: TextFormField(
         //controllers allows for accessing what the user types in the textfield
         controller: controller,
         obscureText: obscureText,
+        inputFormatters: inputFormatters,
+        validator: validator,
         enableSuggestions: false,
         autocorrect: false,
         autofocus: true,

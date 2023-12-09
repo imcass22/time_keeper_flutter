@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -48,6 +42,16 @@ class DefaultFirebaseOptions {
         );
     }
   }
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBhhHxTH1zS4KY9DWTkyyqnx8KElPimaHA',
+    appId: '1:140593780245:web:97d644a168d21693fba01c',
+    messagingSenderId: '140593780245',
+    projectId: 'timekeeper-22949',
+    authDomain: 'timekeeper-22949.firebaseapp.com',
+    databaseURL: 'https://timekeeper-22949-default-rtdb.firebaseio.com',
+    storageBucket: 'timekeeper-22949.appspot.com',
+  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDAI7BYMDcznlMf-nT1eR6pniHeft7XcUw',
@@ -67,5 +71,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'timekeeper-22949.appspot.com',
     iosClientId: '140593780245-noi31bgiqfq18f5vjv21v53qi938nif8.apps.googleusercontent.com',
     iosBundleId: 'com.example.timeKeeper',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyC6xkd1pfyRPrBe-_qPk9wSRyVj8PR97nA',
+    appId: '1:140593780245:ios:2c01cf03f5240885fba01c',
+    messagingSenderId: '140593780245',
+    projectId: 'timekeeper-22949',
+    databaseURL: 'https://timekeeper-22949-default-rtdb.firebaseio.com',
+    storageBucket: 'timekeeper-22949.appspot.com',
+    iosBundleId: 'com.example.timeKeeper.RunnerTests',
   );
 }

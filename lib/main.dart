@@ -5,15 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:time_keeper/auth/auth_page.dart';
 import 'package:time_keeper/auth/bloc/auth_bloc.dart';
 import 'package:time_keeper/auth/firebase_auth_provider.dart';
-import 'package:time_keeper/screens/forgot_password_screen.dart';
-import 'package:time_keeper/screens/login_screen.dart';
-import 'package:time_keeper/screens/verify_email_screen.dart';
+import 'package:time_keeper/firebase_options.dart';
+import 'package:time_keeper/screens/registration_screen.dart';
 
 void main() async {
   //ensures the orientation works as intended
   //initializing Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   //locking the screen orientation in place
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -46,6 +47,8 @@ void main() async {
                 foregroundColor: Color.fromARGB(255, 247, 242, 236),
               ),
             ),
+            // remove debug banner
+            debugShowCheckedModeBanner: false,
             home: const AuthPage(),
           ),
         ),

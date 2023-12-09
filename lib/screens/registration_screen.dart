@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:time_keeper/model/extension.dart';
 import 'package:time_keeper/screens/login_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import 'package:time_keeper/widgets/standard_textfield.dart';
@@ -20,6 +21,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   //text controllers
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -57,81 +59,96 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           title: const Text('Register'),
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50),
-                  const Icon(
-                    Icons.punch_clock_outlined,
-                    size: 100,
-                  ),
-                  const SizedBox(height: 50),
-                  const Text(
-                    'Enter your email and password to register',
-                    style: TextStyle(
-                      fontSize: 18,
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 50),
+                    const Icon(
+                      Icons.punch_clock_outlined,
+                      size: 100,
                     ),
-                  ),
-                  const SizedBox(height: 50.0),
-                  //username textfield from components/my_textfield.dart
-                  StandardTextField(
-                    controller: _emailController,
-                    obscureText: false,
-                    hintText: 'Enter your email here',
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 25),
-                  //password textfield from components/my_textfield.dart
-                  StandardTextField(
-                    controller: _passwordController,
-                    hintText: 'Enter your password here',
-                    obscureText: true,
-                    keyboardType: TextInputType.text,
-                  ),
-                  const SizedBox(height: 25.0),
-                  //Register
-                  ReuseableElevatedButton(
-                    text: 'Register',
-                    color: const Color.fromARGB(255, 37, 33, 41),
-                    onPressed: () {
-                      final email = _emailController.text;
-                      final password = _passwordController.text;
-                      context.read<AuthBloc>().add(
-                            AuthEventRegister(
-                              email,
-                              password,
+                    const SizedBox(height: 50),
+                    const Text(
+                      'Enter your email and password to register',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 50.0),
+                    //username textfield from components/my_textfield.dart
+                    StandardTextField(
+                      controller: _emailController,
+                      obscureText: false,
+                      hintText: 'Enter your email here',
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (val) {
+                        if (!val!.isValidEmail) {
+                          return 'Enter a valid email.';
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 25),
+                    //password textfield from components/my_textfield.dart
+                    StandardTextField(
+                      controller: _passwordController,
+                      hintText: 'Enter your password here',
+                      obscureText: true,
+                      keyboardType: TextInputType.text,
+                      validator: (val) {
+                        if (!val!.isValidPassword) {
+                          return 'Password should contain an upper case letter, a lower \ncase letter, a number, and a special character.';
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 25.0),
+                    //Register
+                    ReuseableElevatedButton(
+                      text: 'Register',
+                      color: const Color.fromARGB(255, 37, 33, 41),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          final email = _emailController.text;
+                          final password = _passwordController.text;
+                          context.read<AuthBloc>().add(
+                                AuthEventRegister(
+                                  email,
+                                  password,
+                                ),
+                              );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 25.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Already registered?'),
+                        const SizedBox(width: 4),
+                        TextButton(
+                          onPressed: () async {
+                            // send user to login screen
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Login here',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 55, 82, 117),
                             ),
-                          );
-                    },
-                  ),
-                  const SizedBox(height: 25.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Already registered?'),
-                      const SizedBox(width: 4),
-                      TextButton(
-                        onPressed: () async {
-                          // send user to login screen
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Login here',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 55, 82, 117),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
