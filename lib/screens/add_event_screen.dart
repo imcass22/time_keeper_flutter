@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:time_keeper/screens/calendar_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -286,14 +287,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     const SnackBar(
                       content: Text(
                           'Please enter a date and provide data for regular and overtime hours.'),
-                      duration: Duration(seconds: 5),
+                      duration: Duration(seconds: 4),
                     ),
                   );
                 } else {
                   // calling method to calculate the total hours after user enters data in both regular hours and overtime hours text fields
                   hoursSum();
                 }
-                if (_selectedDate != null) {
+                if (_selectedDate != null &&
+                    regularHoursController.text.isNotEmpty &&
+                    overtimeHoursController.text.isNotEmpty) {
                   FirebaseFirestore.instance.collection('events').add(
                     {
                       // allows for user not to enter any nots
@@ -308,7 +311,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           .uid, // id for each individual user
                     },
                   );
-                  Navigator.pop(context);
+                  //need to user Navigator.of...instead of Navigator.pop to reload events upon screen change
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CalendarScreen(),
+                    ),
+                  );
                 }
               },
             ),

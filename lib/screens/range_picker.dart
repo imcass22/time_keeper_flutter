@@ -77,6 +77,19 @@ class _RangePickerState extends State<RangePicker> {
     return _totalTotalHours;
   }
 
+  void displayTotals() {
+    Container(
+      padding: const EdgeInsets.all(22),
+      child: ListTile(
+        title: Text(
+          'Total Regular Hours: $_totalRegularHours\n\nTotal Overtime Hours: $_totalOvertimeHours\n\nTotal Hours: $_totalTotalHours',
+          style: const TextStyle(
+              color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+
   Future pickDateRange() async {
     DateTimeRange? newDateRange = await showDateRangePicker(
       context: context,
@@ -145,6 +158,9 @@ class _RangePickerState extends State<RangePicker> {
                     print('Sum of regular hours is: $_totalRegularHours');
                     print('Sum of overtime hours is: $_totalOvertimeHours');
                     print('Sum of total hours is: $_totalTotalHours');
+                    setState(() {
+                      displayTotals();
+                    });
                   },
                 ),
                 const SizedBox(height: 50),

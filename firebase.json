@@ -3,7 +3,6 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "site": "timekeeper-22959",
     "public": "build/web",
     "ignore": [
       "firebase.json",

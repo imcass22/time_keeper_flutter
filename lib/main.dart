@@ -6,7 +6,6 @@ import 'package:time_keeper/auth/auth_page.dart';
 import 'package:time_keeper/auth/bloc/auth_bloc.dart';
 import 'package:time_keeper/auth/firebase_auth_provider.dart';
 import 'package:time_keeper/firebase_options.dart';
-import 'package:time_keeper/screens/registration_screen.dart';
 
 void main() async {
   //ensures the orientation works as intended

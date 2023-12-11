@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:time_keeper/model/event.dart';
+import 'package:time_keeper/screens/calendar_screen.dart';
 import '../widgets/reuseable_elevated_button.dart';
 
 class EditEventScreen extends StatefulWidget {
@@ -269,19 +271,47 @@ class _EditEventScreenState extends State<EditEventScreen> {
               text: 'Save',
               color: const Color.fromARGB(255, 37, 33, 41),
               onPressed: () {
-                hoursSum();
-                FirebaseFirestore.instance
-                    .collection('events')
-                    .doc(widget.event.id)
-                    .update({
-                  'date': DateTime.parse(dateController.text),
-                  'regular hours': regularHoursController.text,
-                  'overtime hours': overtimeHoursController.text,
-                  'mileage': mileageController.text,
-                  'notes': notesController.text,
-                  'total hours': totalHours,
-                });
-                Navigator.pop(context);
+                // checking if the user has entered data for the date, regular hours, and overtime hours fields. If not, a snack bar message will display
+                if (regularHoursController.text.isEmpty ||
+                    overtimeHoursController.text.isEmpty ||
+                    // dateController is not empty it is set to 'Select Date'
+                    dateController.text == 'Select Date') {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Please enter a date and provide data for regular and overtime hours.'),
+                      duration: Duration(seconds: 4),
+                    ),
+                  );
+                } else {
+                  // calling method to calculate the total hours after user enters data in both regular hours and overtime hours text fields
+                  hoursSum();
+                }
+                if (regularHoursController.text.isNotEmpty &&
+                    overtimeHoursController.text.isNotEmpty) {
+                  FirebaseFirestore.instance
+                      .collection('events')
+                      .doc(widget.event.id)
+                      .update(
+                    {
+                      // allows for user not to enter any nots
+                      'notes': notesController.text,
+                      'date': DateTime.parse(dateController.text),
+                      'regular hours': regularHoursController.text,
+                      'overtime hours': overtimeHoursController.text,
+                      'mileage': mileageController.text,
+                      'total hours': totalHours,
+                      'id': FirebaseAuth.instance.currentUser!
+                          .uid, // id for each individual user
+                    },
+                  );
+                  //need to user Navigator.of...instead of Navigator.pop to reload events upon screen change
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const CalendarScreen(),
+                    ),
+                  );
+                }
               },
             ),
             const SizedBox(height: 20),
@@ -293,7 +323,12 @@ class _EditEventScreenState extends State<EditEventScreen> {
                     .collection('events')
                     .doc(widget.event.id)
                     .delete();
-                Navigator.pop(context);
+                //need to user Navigator.of...instead of Navigator.pop to reload events upon screen change
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const CalendarScreen(),
+                  ),
+                );
               },
             ),
           ],

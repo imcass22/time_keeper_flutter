@@ -1,17 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_keeper/model/extension.dart';
-import 'package:time_keeper/screens/login_screen.dart';
 import 'package:time_keeper/widgets/reuseable_elevated_button.dart';
 import 'package:time_keeper/widgets/standard_textfield.dart';
-import '../auth/auth_exceptions.dart';
-import '../auth/bloc/auth_bloc.dart';
-import '../auth/bloc/auth_event.dart';
-import '../auth/bloc/auth_state.dart';
-import '../dialogs/error_dialog.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+  final Function()? onTap;
+  const RegistrationScreen({super.key, required this.onTap});
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -19,136 +14,156 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   //text controllers
-  late final TextEditingController _emailController;
-  late final TextEditingController _passwordController;
+  late final TextEditingController emailController;
+  late final TextEditingController passwordController;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
+  }
+
+  // sign user in method
+  void signUserUp() async {
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    // try creating the user
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      // pop the loading circle
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // pop the loading circle
+      Navigator.pop(context);
+      // show error message "Wrong Credentials" to user for security purposes. Do not want to give malicious actors specific information
+      showErrorMessage('Wrong Credentials');
+    }
+  }
+
+  // error message to user for wrong email or password
+  void showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 37, 33, 41),
+          title: Center(
+            child: Text(
+              message,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 247, 242, 236),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // error handling
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) async {
-        if (state is AuthStateRegistering) {
-          if (state.exception is WeakPasswordAuthException) {
-            await showErrorDialog(context, 'Weak Password');
-          } else if (state.exception is EmailAlreadyInUseAuthException) {
-            await showErrorDialog(context, 'Email is already in use');
-          } else if (state.exception is GenericAuthException) {
-            await showErrorDialog(context, 'Failed to register');
-          } else if (state.exception is InvalidEmailAuthException) {
-            await showErrorDialog(context, 'Invalid email');
-          }
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Register'),
-        ),
-        body: SafeArea(
-          child: Form(
-            key: _formKey,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Center(
             child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 50),
-                    const Icon(
-                      Icons.punch_clock_outlined,
-                      size: 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.lock,
+                    size: 100,
+                  ),
+                  const SizedBox(height: 50),
+                  const Text(
+                    'Enter your email and password to register',
+                    style: TextStyle(
+                      fontSize: 18,
                     ),
-                    const SizedBox(height: 50),
-                    const Text(
-                      'Enter your email and password to register',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 50.0),
-                    //username textfield from components/my_textfield.dart
-                    StandardTextField(
-                      controller: _emailController,
-                      obscureText: false,
-                      hintText: 'Enter your email here',
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (val) {
-                        if (!val!.isValidEmail) {
-                          return 'Enter a valid email.';
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                    //password textfield from components/my_textfield.dart
-                    StandardTextField(
-                      controller: _passwordController,
-                      hintText: 'Enter your password here',
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      validator: (val) {
-                        if (!val!.isValidPassword) {
-                          return 'Password should contain an upper case letter, a lower \ncase letter, a number, and a special character.';
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 25.0),
-                    //Register
-                    ReuseableElevatedButton(
-                      text: 'Register',
-                      color: const Color.fromARGB(255, 37, 33, 41),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          final email = _emailController.text;
-                          final password = _passwordController.text;
-                          context.read<AuthBloc>().add(
-                                AuthEventRegister(
-                                  email,
-                                  password,
-                                ),
-                              );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 25.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Already registered?'),
-                        const SizedBox(width: 4),
-                        TextButton(
-                          onPressed: () async {
-                            // send user to login screen
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'Login here',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 55, 82, 117),
-                            ),
+                  ),
+                  const SizedBox(height: 50.0),
+                  //username textfield from components/my_textfield.dart
+                  StandardTextField(
+                    controller: emailController,
+                    obscureText: false,
+                    hintText: 'Enter your email here',
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (val) {
+                      if (!val!.isValidEmail) {
+                        return 'Enter a valid email.';
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                  //password textfield from components/my_textfield.dart
+                  StandardTextField(
+                    controller: passwordController,
+                    hintText: 'Enter your password here',
+                    obscureText: true,
+                    keyboardType: TextInputType.text,
+                    validator: (val) {
+                      if (!val!.isValidPassword) {
+                        return 'Password should contain an upper case letter, a lower \ncase letter, a number, and a special character.';
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 25.0),
+                  //Register
+                  ReuseableElevatedButton(
+                    text: 'Register',
+                    color: const Color.fromARGB(255, 37, 33, 41),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        signUserUp();
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const AuthPage(),
+                        //   ),
+                        // );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 25.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Already registered?'),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: const Text(
+                          'Login here',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 55, 82, 117),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

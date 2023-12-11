@@ -23,8 +23,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   late DateTime _firstDay;
   late DateTime _lastDay;
   late DateTime _selectedDay;
-
-  late Map<DateTime, List<Event>> _events;
+  Map<DateTime, List<Event>> _events = {};
+  late final ValueNotifier<List<Event>> _selectedEvents;
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     _firstDay = DateTime.now().subtract(const Duration(days: 1000));
     _lastDay = DateTime.now().add(const Duration(days: 1000));
     _selectedDay = DateTime.now();
-    //_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
     super.initState();
     _events = LinkedHashMap(
       equals: isSameDay,
@@ -223,9 +223,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       }
                     },
                     onPageChanged: (focusedDay) {
-                      setState(() {
-                        _focusedDay = focusedDay;
-                      });
+                      _focusedDay = focusedDay;
                       _loadFirestoreEvents();
                     },
                     calendarStyle: const CalendarStyle(
@@ -239,32 +237,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ],
               ),
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     Padding(
-            //       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            //       child: FloatingActionButton(
-            //         backgroundColor: const Color.fromARGB(255, 37, 33, 41),
-            //         child: const Icon(Icons.add, color: Colors.white),
-            //         onPressed: () async {
-            //           final result = await Navigator.push<bool>(
-            //             context,
-            //             MaterialPageRoute(
-            //               builder: (context) => AddEventScreen(
-            //                 selectedDate: _selectedDay,
-            //               ),
-            //             ),
-            //           );
-            //           if (result ?? false) {
-            //             _loadFirestoreEvents();
-            //           }
-            //         },
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // navigation to edit events
             ..._getEventsForDay(_selectedDay).map(
               (event) => GestureDetector(
                 onTap: () async {
@@ -275,21 +247,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   );
                 },
-                child: ListTile(
-                  title: Text(
-                    event.date.toString().substring(0, 10),
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18),
-                  ),
-                  subtitle: Text(
-                    'Regular hours: ${event.regularHours!}\nOvertime hours: ${event.overtimeHours}\nTotal hours: ${event.totalHours}\nMileage: ${event.mileage}\nNotes: ${event.notes}',
-                    style: const TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16),
-                  ),
+                child: ValueListenableBuilder<List<Event>>(
+                  valueListenable: _selectedEvents,
+                  builder: (context, value, _) {
+                    return ListTile(
+                      title: Text(
+                        event.date.toString().substring(0, 10),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      ),
+                      subtitle: Text(
+                        'Regular hours: ${event.regularHours!}\nOvertime hours: ${event.overtimeHours}\nTotal hours: ${event.totalHours}\nMileage: ${event.mileage}\nNotes: ${event.notes}',
+                        style: const TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
