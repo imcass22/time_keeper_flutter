@@ -54,8 +54,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
-      // show error message "Wrong Credentials" to user for security purposes. Do not want to give malicious actors specific information
-      showErrorMessage('Wrong Credentials');
+      // show error message to user
+      showErrorMessage(e.code);
     }
   }
 
